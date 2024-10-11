@@ -1,0 +1,1 @@
+const String kLogoHeroTag = "logo_tag";
