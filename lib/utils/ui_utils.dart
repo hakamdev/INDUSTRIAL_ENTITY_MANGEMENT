@@ -10,3 +10,16 @@ void showError(BuildContext context, {required XErrors<String> error}) {
     ),
   );
 }
+
+double getLongestSize(BuildContext context) {
+  return MediaQuery.sizeOf(context).longestSide;
+}
+
+bool isLandscapeOrientation(BuildContext context) {
+  return MediaQuery.sizeOf(context).width > MediaQuery.sizeOf(context).height;
+}
+
+bool isTablet(BuildContext context) {
+  var shortestSize = MediaQuery.sizeOf(context).shortestSide;
+  return shortestSize >= 600;
+}

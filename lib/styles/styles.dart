@@ -54,13 +54,13 @@ ThemeData buildTheme(Color primaryColor, Brightness brightness) {
       borderRadius: const BorderRadius.all(Radius.circular(12)),
       borderSide: BorderSide(
         color: baseTheme.colorScheme.inversePrimary,
-        width: 1.5,
+        width: 1,
       ),
     ),
     focusedBorder: OutlineInputBorder(
       borderRadius: const BorderRadius.all(Radius.circular(12)),
       borderSide: BorderSide(
-        color: baseTheme.colorScheme.inversePrimary,
+        color: baseTheme.colorScheme.primary,
         width: 1.5,
       ),
     ),
@@ -68,14 +68,14 @@ ThemeData buildTheme(Color primaryColor, Brightness brightness) {
       borderRadius: const BorderRadius.all(Radius.circular(12)),
       borderSide: BorderSide(
         color: baseTheme.disabledColor,
-        width: 1.5,
+        width: 1,
       ),
     ),
     errorBorder: OutlineInputBorder(
       borderRadius: const BorderRadius.all(Radius.circular(12)),
       borderSide: BorderSide(
         color: baseTheme.colorScheme.error,
-        width: 1.5,
+        width: 1,
       ),
     ),
     focusedErrorBorder: OutlineInputBorder(

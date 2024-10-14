@@ -24,6 +24,8 @@ class LoginScreen extends StatefulWidget {
 class _LoginScreenState extends State<LoginScreen> {
   /// KEYS & CONTROLLERS
   GlobalKey<FormState> formKey = GlobalKey<FormState>();
+  TextEditingController emailController = TextEditingController();
+  TextEditingController passwordController = TextEditingController();
 
   /// STATE
   String email = "";
@@ -66,117 +68,242 @@ class _LoginScreenState extends State<LoginScreen> {
     return GestureDetector(
       onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
       child: Scaffold(
-        body: Container(
-          width: double.infinity,
-          decoration: BoxDecoration(
-            gradient: LinearGradient(
-              begin: Alignment.topCenter,
-              end: Alignment.bottomCenter,
-              colors: [
-                Theme.of(context).colorScheme.surface,
-                Theme.of(context).colorScheme.inversePrimary,
-              ],
+        body: _LoginAdaptiveForm(
+          formKey: formKey,
+          appLogo: const XAppLogo(
+            logo: "assets/logo_oqvt.png",
+            size: 200,
+          ),
+          label: XLabel(
+            label: "Connexion",
+            style: Theme.of(context).textTheme.headlineMedium?.copyWith(
+                  fontWeight: FontWeight.bold,
+                ),
+          ),
+          emailTextField: TextFormField(
+            controller: emailController,
+            validator: XValidators.email,
+            enabled: authProvider.state != XState.loading,
+            textInputAction: TextInputAction.next,
+            keyboardType: TextInputType.emailAddress,
+            style: TextStyle(
+              color: Theme.of(context).colorScheme.onSurface,
+              fontSize: 14,
+              fontWeight: FontWeight.w600,
             ),
+            onChanged: (v) {
+              setState(() => email = v.trim());
+            },
+            decoration: const InputDecoration(
+              labelText: "Email",
+              hintText: "prenom.nom@um6p.ma",
+            ),
+          ),
+          passwordTextField: TextFormField(
+            controller: passwordController,
+            enabled: authProvider.state != XState.loading,
+            validator: XValidators.password,
+            keyboardType: TextInputType.visiblePassword,
+            textInputAction: TextInputAction.done,
+            obscureText: true,
+            style: TextStyle(
+              color: Theme.of(context).colorScheme.onSurface,
+              fontSize: 14,
+              fontWeight: FontWeight.w600,
+            ),
+            onChanged: (v) {
+              setState(() => password = v.trim());
+            },
+            onFieldSubmitted: (_) => onLoginPressed(),
+            decoration: InputDecoration(
+              labelText: "Password",
+              hintText: "************",
+              border: OutlineInputBorder(
+                borderRadius: const BorderRadius.all(Radius.circular(12)),
+                borderSide: BorderSide(
+                  color: Theme.of(context).colorScheme.inversePrimary,
+                  width: 1.5,
+                ),
+              ),
+            ),
+          ),
+          loginButton: FilledButton(
+            onPressed:
+                authProvider.state != XState.loading ? onLoginPressed : null,
+            style: FilledButton.styleFrom(
+              backgroundColor: Theme.of(context).colorScheme.onSurface,
+              foregroundColor: Theme.of(context).colorScheme.surface,
+            ),
+            child: authProvider.state != XState.loading
+                ? const Text("Se connecter")
+                : const SizedBox(
+                    height: 24,
+                    width: 24,
+                    child: CircularProgressIndicator(),
+                  ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class _LoginAdaptiveForm extends StatelessWidget {
+  const _LoginAdaptiveForm({
+    super.key,
+    required this.formKey,
+    required this.appLogo,
+    required this.label,
+    required this.emailTextField,
+    required this.passwordTextField,
+    required this.loginButton,
+  });
+
+  final GlobalKey<FormState> formKey;
+  final Widget appLogo;
+  final Widget label;
+  final Widget emailTextField;
+  final Widget passwordTextField;
+  final Widget loginButton;
+
+  Widget getViewByOrientation(BuildContext context) {
+    final isLandscape = isLandscapeOrientation(context);
+    if (isLandscape) return getLandscapeView(context);
+    return getPortraitView(context);
+  }
+
+  Widget getPortraitView(BuildContext context) {
+    return SizedBox(
+      width: double.infinity,
+      child: SingleChildScrollView(
+        child: ConstrainedBox(
+          constraints: BoxConstraints(
+            maxHeight: getLongestSize(context),
+            minHeight: getLongestSize(context),
           ),
           child: SafeArea(
             child: Padding(
-              padding:
-                  const EdgeInsets.symmetric(horizontal: 24.0, vertical: 16),
-              child: Column(
-                children: [
-                  const XAppLogo(
-                    logo: "assets/logo_oqvt.png",
-                    size: 150,
-                  ),
-                  const Spacer(),
-                  XLabel(
-                    label: "Connexion",
-                    style: Theme.of(context).textTheme.headlineMedium?.copyWith(
-                          fontWeight: FontWeight.bold,
-                        ),
-                  ),
-                  const SizedBox(height: 16),
-                  TextFormField(
-                    validator: XValidators.email,
-                    enabled: authProvider.state != XState.loading,
-                    textInputAction: TextInputAction.next,
-                    style: TextStyle(
-                      color: Theme.of(context).colorScheme.onSurface,
-                      fontSize: 14,
-                      fontWeight: FontWeight.w600,
-                    ),
-                    onChanged: (v) {
-                      setState(() => email = v.trim());
-                    },
-                    decoration: const InputDecoration(
-                      labelText: "Email",
-                      hintText: "prenom.nom@um6p.ma",
-                    ),
-                  ),
-                  const SizedBox(height: 24),
-                  TextFormField(
-                    enabled: authProvider.state != XState.loading,
-                    validator: XValidators.password,
-                    textInputAction: TextInputAction.done,
-                    obscureText: true,
-                    style: TextStyle(
-                      color: Theme.of(context).colorScheme.onSurface,
-                      fontSize: 14,
-                      fontWeight: FontWeight.w600,
-                    ),
-                    onChanged: (v) {
-                      setState(() => password = v.trim());
-                    },
-                    onFieldSubmitted: (_) => onLoginPressed(),
-                    decoration: InputDecoration(
-                      labelText: "Password",
-                      hintText: "************",
-                      border: OutlineInputBorder(
-                        borderRadius:
-                            const BorderRadius.all(Radius.circular(12)),
-                        borderSide: BorderSide(
+              padding: const EdgeInsets.symmetric(
+                horizontal: 16.0,
+                vertical: 16,
+              ),
+              child: Form(
+                key: formKey,
+                child: Column(
+                  children: [
+                    Expanded(child: appLogo),
+                    Flexible(
+                      child: Container(
+                        padding: const EdgeInsets.all(24),
+                        constraints:
+                            const BoxConstraints(maxWidth: 500, maxHeight: 500),
+                        decoration: BoxDecoration(
                           color: Theme.of(context).colorScheme.inversePrimary,
-                          width: 1.5,
+                          borderRadius: BorderRadius.circular(32),
+                        ),
+                        child: Column(
+                          children: [
+                            const Spacer(),
+                            label,
+                            const SizedBox(height: 24),
+                            emailTextField,
+                            const SizedBox(height: 24),
+                            passwordTextField,
+                            const SizedBox(height: 32),
+                            SizedBox(
+                              width: double.infinity,
+                              child: loginButton,
+                            ),
+                            const Spacer(),
+                          ],
                         ),
                       ),
                     ),
-                  ),
-                  const SizedBox(height: 24),
-                  SizedBox(
-                      width: double.infinity,
-                      child: FilledButton(
-                        onPressed: authProvider.state != XState.loading
-                            ? onLoginPressed
-                            : null,
-                        style: FilledButton.styleFrom(
-                          backgroundColor:
-                              Theme.of(context).colorScheme.onSurface,
-                          foregroundColor:
-                              Theme.of(context).colorScheme.surface,
-                        ),
-                        child: authProvider.state != XState.loading
-                            ? const Text("Se connecter")
-                            : const SizedBox(
-                                height: 24,
-                                width: 24,
-                                child: CircularProgressIndicator(),
-                              ),
-                      )
-                      // : const Align(
-                      //     alignment: Alignment.center,
-                      //     child: Padding(
-                      //       padding: EdgeInsets.all(4.0),
-                      //       child: CircularProgressIndicator(),
-                      //     ),
-                      //   ),
-                      ),
-                  const Spacer(),
-                ],
+                  ],
+                ),
               ),
             ),
           ),
         ),
       ),
     );
+  }
+
+  Widget getLandscapeView(BuildContext context) {
+    return SizedBox(
+      width: double.infinity,
+      child: SingleChildScrollView(
+        child: ConstrainedBox(
+          constraints: BoxConstraints(
+            maxHeight: MediaQuery.sizeOf(context).height,
+            minHeight: MediaQuery.sizeOf(context).height,
+          ),
+          child: SafeArea(
+            child: Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Form(
+                key: formKey,
+                child: Row(
+                  children: [
+                    Expanded(child: appLogo),
+                    const SizedBox(width: 16),
+                    Flexible(
+                      child: Container(
+                        padding: const EdgeInsets.all(24),
+                        constraints:
+                            const BoxConstraints(maxWidth: 500, maxHeight: 500),
+                        decoration: BoxDecoration(
+                          color: Theme.of(context).colorScheme.inversePrimary,
+                          borderRadius: BorderRadius.circular(32),
+                        ),
+                        child: Column(
+                          children: [
+                            const Spacer(),
+                            label,
+                            const SizedBox(height: 24),
+                            emailTextField,
+                            const SizedBox(height: 24),
+                            passwordTextField,
+                            const SizedBox(height: 32),
+                            SizedBox(
+                              width: double.infinity,
+                              child: loginButton,
+                              // FilledButton(
+                              //   onPressed: authProvider.state != XState.loading
+                              //       ? onLoginPressed
+                              //       : null,
+                              //   style: FilledButton.styleFrom(
+                              //     backgroundColor:
+                              //     Theme.of(context).colorScheme.onSurface,
+                              //     foregroundColor:
+                              //     Theme.of(context).colorScheme.surface,
+                              //   ),
+                              //   child: authProvider.state != XState.loading
+                              //       ? const Text("Se connecter")
+                              //       : const SizedBox(
+                              //     height: 24,
+                              //     width: 24,
+                              //     child: CircularProgressIndicator(),
+                              //   ),
+                              // ),
+                            ),
+                            const Spacer(),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return getViewByOrientation(context);
   }
 }

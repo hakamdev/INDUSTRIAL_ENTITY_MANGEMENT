@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:oqvt_industrial_entity_management/providers/auth_provider.dart';
 import 'package:oqvt_industrial_entity_management/screens/change_password_screen.dart';
@@ -73,7 +75,7 @@ class _OnboardScreenState extends State<OnboardingScreen> {
                       ),
                   align: TextAlign.center,
                 ),
-                const SizedBox(height: 24),
+                const SizedBox(height: 16),
                 const XLabel(
                   label:
                       "This app is for managing the laboratory equipment and "
@@ -81,10 +83,11 @@ class _OnboardScreenState extends State<OnboardingScreen> {
                       "team.",
                   align: TextAlign.center,
                 ),
-                const SizedBox(height: 24),
+                const SizedBox(height: 42),
                 ConstrainedBox(
                   constraints: BoxConstraints(
-                    minWidth: MediaQuery.sizeOf(context).width * 0.5,
+                    minWidth: min(200, MediaQuery.sizeOf(context).width * 0.5),
+                    maxWidth: 200,
                   ),
                   child: FilledButton(
                     onPressed: onGetStartedPressed,
