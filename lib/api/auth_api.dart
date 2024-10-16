@@ -58,7 +58,7 @@ class AuthApi {
     }
     try {
       final response = await dio.post(
-        "$ip/api/v1/auth/login",
+        "$ip/health_center/api/v1/auth/login",
         cancelToken: cancelToken,
         data: data,
       );

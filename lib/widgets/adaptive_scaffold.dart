@@ -24,23 +24,61 @@ class XAdaptiveScaffold extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final deviceIsTablet = isTablet(context);
+    final isLandscape = isLandscapeOrientation(context);
 
     return Scaffold(
-      appBar: appBar,
-      body: deviceIsTablet
+      appBar: !deviceIsTablet ? appBar : null,
+      body: deviceIsTablet && isLandscape
           ? Row(
               children: [
                 NavigationRail(
+                  // leading: Padding(
+                  //   padding:
+                  //       const EdgeInsets.only(left: 16, right: 16, bottom: 16),
+                  //   child: Image.asset(
+                  //     "assets/logo_oqvt.png",
+                  //     width: 80,
+                  //   ),
+                  // ),
                   destinations: railDestinations,
                   selectedIndex: selectedIndex,
                   onDestinationSelected: onDestinationSelected,
+                  labelType: NavigationRailLabelType.all,
+                  minWidth: 10,
+                  backgroundColor:
+                      Theme.of(context).colorScheme.surfaceContainer,
+                  trailing: Expanded(
+                    child: Column(
+                      children: [
+                        const Spacer(),
+                        IconButton(
+                          onPressed: () {},
+                          style: IconButton.styleFrom(
+                              foregroundColor:
+                                  Theme.of(context).colorScheme.error,
+                              backgroundColor:
+                                  Theme.of(context).colorScheme.errorContainer,
+                              padding: const EdgeInsets.all(12)),
+                          icon: const Icon(
+                            Icons.logout_rounded,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
                 ),
-                if (body != null) Expanded(child: body!),
+                if (body != null)
+                  Expanded(
+                    child: Scaffold(
+                      appBar: appBar,
+                      body: body,
+                    ),
+                  ),
               ],
             )
           : body,
       floatingActionButton: fab,
-      bottomNavigationBar: !deviceIsTablet
+      bottomNavigationBar: !deviceIsTablet || !isLandscape
           ? NavigationBar(
               selectedIndex: selectedIndex,
               onDestinationSelected: onDestinationSelected,

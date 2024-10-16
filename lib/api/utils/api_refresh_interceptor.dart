@@ -28,7 +28,7 @@ class ApiRefreshInterceptor extends Interceptor {
 
   Future<dynamic> _refreshAccessToken(RequestOptions options) async {
     final ip = options.path.split("/").sublist(0, 3).join("/");
-    var response = await dio.post("$ip/api/v1/auth/refresh");
+    var response = await dio.post("$ip/health_center/api/v1/auth/refresh");
     if (response.statusCode == HttpStatus.ok) {
       return response;
     }

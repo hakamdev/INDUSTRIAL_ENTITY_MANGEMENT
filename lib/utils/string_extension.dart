@@ -6,4 +6,9 @@ extension StringModifier on String {
       return toUpperCase();
     }
   }
+
+  String ellipsis([int max = 10]) {
+    if (length <= max) return this;
+    return "${substring(0, max - 3)}...";
+  }
 }

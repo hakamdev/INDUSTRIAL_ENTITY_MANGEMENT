@@ -64,7 +64,7 @@ class UserApi {
     }
     try {
       final response = await dio.post(
-        "$ip/api/v1/auth/changePassword",
+        "$ip/health_center/api/v1/auth/changePassword",
         cancelToken: cancelToken,
         data: data,
       );
@@ -95,7 +95,7 @@ class UserApi {
     }
     try {
       final response = await dio.get(
-        "$ip/api/v1/users/me",
+        "$ip/health_center/api/v1/users/me",
         cancelToken: cancelToken,
       );
       if (response.statusCode == HttpStatus.ok) {
@@ -103,9 +103,12 @@ class UserApi {
       }
       return Future.error(const ApiException(XErrors.other));
     } on DioException catch (e) {
+      print(e.requestOptions.path);
+      print(e.requestOptions.uri.toString());
       print(e.error);
       print(e.type);
       print(e.message);
+      print(e.response?.data);
 
       switch (e.type) {
         case DioExceptionType.connectionError:
