@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:oqvt_industrial_entity_management/providers/auth_provider.dart';
 import 'package:oqvt_industrial_entity_management/screens/change_password_screen.dart';
+import 'package:oqvt_industrial_entity_management/screens/detail_screens/equipment_details_screen.dart';
 import 'package:oqvt_industrial_entity_management/screens/login_screen.dart';
 import 'package:oqvt_industrial_entity_management/screens/main_screen.dart';
 import 'package:oqvt_industrial_entity_management/screens/onboarding_screen.dart';
@@ -38,6 +39,8 @@ class MyApp extends StatelessWidget {
             MainScreen.routeName: (context) => const MainScreen(),
             ProfileScreen.routeName: (context) => const ProfileScreen(),
             SettingsScreen.routeName: (context) => const SettingsScreen(),
+            EquipmentDetailsScreen.routeName: (context) =>
+                const EquipmentDetailsScreen(),
           },
           theme: buildTheme(Colors.lightBlue, Brightness.light),
           darkTheme: buildTheme(Colors.lightBlue, Brightness.dark),

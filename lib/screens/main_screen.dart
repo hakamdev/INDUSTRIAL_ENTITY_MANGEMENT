@@ -53,23 +53,35 @@ class _MainScreenState extends State<MainScreen> {
   ];
 
   Widget getScreen1(BuildContext context) {
-    return const HomeScreen();
+    return HomeScreen(
+      onPageChanged: (index) {
+        setState(() => currentScreenIndex = index);
+      },
+    );
   }
 
   Widget getScreen2(BuildContext context) {
-    return const EquipmentsScreen();
+    return EquipmentsScreen(
+      viewPadding: MediaQuery.viewPaddingOf(context),
+    );
   }
 
   Widget getScreen3(BuildContext context) {
-    return const ConsumablesScreen();
+    return ConsumablesScreen(
+      viewPadding: MediaQuery.viewPaddingOf(context),
+    );
   }
 
   Widget getScreen4(BuildContext context) {
-    return const ActivitiesScreen();
+    return ActivitiesScreen(
+      viewPadding: MediaQuery.viewPaddingOf(context),
+    );
   }
 
   Widget getScreen5(BuildContext context) {
-    return const PeopleScreen();
+    return PeopleScreen(
+      viewPadding: MediaQuery.viewPaddingOf(context),
+    );
   }
 
   @override

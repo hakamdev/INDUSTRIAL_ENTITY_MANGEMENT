@@ -10,6 +10,7 @@ class XHomeCard extends StatelessWidget {
     this.backgroundColor,
     this.foregroundColor,
     this.textColor,
+    this.onPressed,
   });
 
   final String title;
@@ -18,6 +19,7 @@ class XHomeCard extends StatelessWidget {
   final Color? backgroundColor;
   final Color? foregroundColor;
   final Color? textColor;
+  final VoidCallback? onPressed;
 
   @override
   Widget build(BuildContext context) {
@@ -69,7 +71,7 @@ class XHomeCard extends StatelessWidget {
       color: backgroundColor ?? Colors.yellow,
       borderRadius: BorderRadius.circular(24),
       child: InkWell(
-        onTap: () {},
+        onTap: onPressed,
         borderRadius: BorderRadius.circular(24),
         child: Container(
             width: double.infinity,
@@ -98,29 +100,31 @@ class XHomeCard extends StatelessWidget {
                           ),
                         if (!deviceIsTablet) const SizedBox(width: 16),
                         Expanded(
-                            child: SingleChildScrollView(
-                          physics: const BouncingScrollPhysics(),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                title,
-                                style: titleStyle?.copyWith(
-                                  color: textColor ?? Colors.yellow,
-                                  fontWeight: FontWeight.w600,
+                            child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              title,
+                              style: titleStyle?.copyWith(
+                                color: textColor ?? Colors.yellow,
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
+                            SizedBox(height: textSpacing),
+                            Expanded(
+                              child: SingleChildScrollView(
+                                physics: const BouncingScrollPhysics(),
+                                child: Text(
+                                  description,
+                                  overflow: TextOverflow.fade,
+                                  style: descStyle?.copyWith(
+                                    color: (textColor ?? Colors.yellow)
+                                        .withAlpha(150),
+                                  ),
                                 ),
                               ),
-                              SizedBox(height: textSpacing),
-                              Text(
-                                description,
-                                overflow: TextOverflow.fade,
-                                style: descStyle?.copyWith(
-                                  color: (textColor ?? Colors.yellow)
-                                      .withAlpha(150),
-                                ),
-                              ),
-                            ],
-                          ),
+                            ),
+                          ],
                         )),
                         if (!deviceIsTablet && !deviceIsLandscape)
                           const SizedBox(width: 16),

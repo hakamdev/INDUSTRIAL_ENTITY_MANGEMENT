@@ -1,59 +1,106 @@
 import 'package:flutter/material.dart';
+import 'package:oqvt_industrial_entity_management/screens/profile_screen.dart';
+import 'package:oqvt_industrial_entity_management/utils/constants.dart';
+import 'package:oqvt_industrial_entity_management/utils/navigation.dart';
 import 'package:oqvt_industrial_entity_management/utils/ui_utils.dart';
+import 'package:oqvt_industrial_entity_management/widgets/app_bar.dart';
 import 'package:oqvt_industrial_entity_management/widgets/home_card.dart';
 
 class HomeScreen extends StatefulWidget {
-  const HomeScreen({super.key});
+  const HomeScreen({
+    super.key,
+    required this.onPageChanged,
+  });
+
+  final void Function(int) onPageChanged;
 
   @override
   State<HomeScreen> createState() => _HomeScreenState();
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  void onNotificationPressed() async {
+    final result = await showNotificationsSheet(
+      context,
+      title: "Notifications",
+    );
+  }
+
+  void onProfilePressed() {
+    XNavigator.go(
+      context,
+      to: ProfileScreen.routeName,
+      withArgs: kHeroTagProfilePic,
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Home"),
-        backgroundColor: Theme.of(context).colorScheme.surfaceContainer,
+        toolbarHeight: 0,
+        backgroundColor: Theme.of(context).colorScheme.surface,
+        // stretch: true,
+        // floating: true,
+        // snap: true,
+        bottom: PreferredSize(
+          preferredSize: const Size.fromHeight(84),
+          child: Material(
+            child: XAppBar(
+              avatarUrl:
+                  // "https://avatar.iran.liara.run/public/job/doctor/male",
+                  "https://avatar.iran.liara.run/public/boy",
+              name: "Abd Elkebir",
+              healthCenter: "OQVT - Ben Guerir",
+              notificationsCount: 10,
+              padding: const EdgeInsets.only(left: 24, right: 24, top: 16),
+              onAvatarPressed: onProfilePressed,
+              onNotificationsPressed: onNotificationPressed,
+            ),
+          ),
+        ),
       ),
       body: _AdaptiveHomeScreenGrid(
         cards: [
           XHomeCard(
             title: "Gestion des équipements",
             description:
-                "Some very long description, Some very long description, Some very long description, Some very long description, Some very long description, Some very long description, Some very long description, ",
+                "Suivi en temps réel de l'état, de la disponibilité et de la maintenance des équipements du laboratoire.",
             icon: Icons.home_repair_service_outlined,
             backgroundColor: Theme.of(context).colorScheme.primary,
             foregroundColor: Theme.of(context).colorScheme.primaryContainer,
             textColor: Theme.of(context).colorScheme.onPrimary,
+            onPressed: () => widget.onPageChanged(1),
           ),
           XHomeCard(
             title: "Gestion des besoins et consommables",
             description:
-                "Some very long description, Some very long description, Someeferg  er very long description, Some very long description, Some very long description, Some very long description, Some very long description, ",
+                "Gestion des stocks, prévisions des besoins, et automatisation des commandes pour assurer une disponibilité continue des ressources nécessaires.",
             icon: Icons.sign_language_outlined,
             backgroundColor: Theme.of(context).colorScheme.secondary,
             foregroundColor: Theme.of(context).colorScheme.secondaryContainer,
             textColor: Theme.of(context).colorScheme.onSecondary,
+            onPressed: () => widget.onPageChanged(2),
           ),
           XHomeCard(
             title: "Gestion des activités",
             description:
-                "Some very long description, Some very long description, Some very reg erg erg er fw qdqw fr eg w elong description, Some very long description, Some very long description, Some very long description, Some very long description, ",
+                "Planification, suivi et compte rendu des missions, avec une coordination automatisée pour vérifier la disponibilité des équipements et consommables nécessaires.",
             icon: Icons.leaderboard_outlined,
             backgroundColor: Theme.of(context).colorScheme.tertiary,
             foregroundColor: Theme.of(context).colorScheme.tertiaryContainer,
             textColor: Theme.of(context).colorScheme.onTertiary,
+            onPressed: () => widget.onPageChanged(3),
           ),
           XHomeCard(
             title: "Gestion du capital humain",
             description:
-                "Some very long description, Some very long description, ew w ef wef we f wg re fe wfew w   Somereg r ge rg erg er g erg very long description, Some very long description, Some very long description, Some very long description, Some very long description, ",
+                "Suivi des compétences, gestion des plannings et disponibilité du personnel, avec des notifications pour les formations et certifications.",
             icon: Icons.group_outlined,
             backgroundColor: Theme.of(context).colorScheme.onSecondaryContainer,
             foregroundColor: Theme.of(context).colorScheme.secondaryContainer,
             textColor: Theme.of(context).colorScheme.onSecondary,
+            onPressed: () => widget.onPageChanged(4),
           ),
         ],
       ),
